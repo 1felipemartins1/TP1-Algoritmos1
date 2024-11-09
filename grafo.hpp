@@ -13,7 +13,7 @@ public:
     void adicionarEstrada(const std::string& cidadeA, const std::string& cidadeB);
     std::string encontrarCapital(); // Encontra a capital ideal
     void adicionarCidade(const std::string& cidade); // Adiciona cidades sem criar conexões
-    int contarBatalhoesSecundarios(); // Conta o número de batalhões secundários necessários
+    std::vector <std::string>  contarBatalhoesSecundarios(); // Conta o número de batalhões secundários necessários
 
 private:
     std::pair<bool, int> bfs(int start); // Busca em largura para verificar acessibilidade
@@ -22,7 +22,7 @@ private:
     std::vector<std::string> index_to_city; // Mapeamento índice -> cidade
     std::vector<std::vector<int>> adjacencias; // Lista de adjacências
     std::vector<std::vector<int>> adjacenciasTranspostas; // Grafo transposto
-
+    std::vector<int> bfsDistancias(int start);
     void dfsOriginal(int v, std::vector<bool>& visitado, std::stack<int>& pilha);
     void dfsTransposto(int v, std::vector<bool>& visitado, std::vector<int>& componente);
     std::vector<std::vector<int>> encontrarComponentesFortementeConexas(); // Encontra SCCs

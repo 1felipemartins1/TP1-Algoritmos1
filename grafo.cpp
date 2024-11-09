@@ -128,8 +128,60 @@ std::vector<std::vector<int>> Grafo::encontrarComponentesFortementeConexas() {
     return sccs;
 }
 
-int Grafo::contarBatalhoesSecundarios() {
+// Função para calcular a distância de cada cidade a partir da capital usando BFS
+std::vector<int> Grafo::bfsDistancias(int start) {
+    std::vector<int> dist(numCidades, std::numeric_limits<int>::max());
+    std::queue<int> fila;
+    dist[start] = 0;
+    fila.push(start);
+
+    while (!fila.empty()) {
+        int cidadeAtual = fila.front();
+        fila.pop();
+
+        for (int vizinho : adjacencias[cidadeAtual]) {
+            if (dist[vizinho] == std::numeric_limits<int>::max()) {
+                dist[vizinho] = dist[cidadeAtual] + 1;
+                fila.push(vizinho);
+            }
+        }
+    }
+
+    return dist;
+}
+
+std::vector<std::string> Grafo::contarBatalhoesSecundarios() {
     auto sccs = encontrarComponentesFortementeConexas();
-    int resultado = static_cast<int>(sccs.size()) - 1; //visto que, o batalhão principal já está incluído
-    return resultado;
+    std::vector<std::string> batalhoesSecundarios;
+    std::string capital = encontrarCapital();
+    int capitalIndex = city_to_index[capital];
+
+    // Calcula a distância de cada cidade a partir da capital
+    std::vector<int> distancias = bfsDistancias(capitalIndex);
+
+    for (const auto& componente : sccs) {
+        bool contemCapital = false;
+        int cidadeMaisProxima = -1;
+        int menorDistancia = std::numeric_limits<int>::max();
+
+        // Verifica se a SCC contém a capital e encontra a cidade mais próxima
+        for (int cidade : componente) {
+            if (cidade == capitalIndex) {
+                contemCapital = true;
+                break;
+            }
+            // Atualiza a cidade mais próxima se ela tiver uma menor distância
+            if (distancias[cidade] < menorDistancia) {
+                menorDistancia = distancias[cidade];
+                cidadeMaisProxima = cidade;
+            }
+        }
+
+        // Se a SCC não contém a capital, adiciona a cidade mais próxima na lista de batalhões
+        if (!contemCapital && cidadeMaisProxima != -1) {
+            batalhoesSecundarios.push_back(index_to_city[cidadeMaisProxima]);
+        }
+    }
+
+    return batalhoesSecundarios;
 }

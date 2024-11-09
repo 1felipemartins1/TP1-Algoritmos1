@@ -26,10 +26,13 @@ int main() {
     }
 
     std::string capital = grafo.encontrarCapital();
-    std::cout << "A capital ideal é: " << capital << std::endl;
+    std::cout << capital << std::endl;
 
-    int batalhoesSecundarios = grafo.contarBatalhoesSecundarios();
-    std::cout << "Número mínimo de batalhões secundários necessários: " << batalhoesSecundarios << std::endl;
+    auto batalhoesSecundarios = grafo.contarBatalhoesSecundarios();
+    std::cout << batalhoesSecundarios.size() << std::endl;
+    for (const std::string& cidade : batalhoesSecundarios) {
+        std::cout << cidade << std::endl;
+    }
 
     return 0;
 }
